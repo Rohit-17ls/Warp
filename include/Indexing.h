@@ -41,15 +41,23 @@ Tensor& Tensor::operator[](const int& index){
 
 	for(int& dim : v) std::cout << dim << " ";
 
-	std::cout << block_size << std::endl;
+	std::cout << "\n" << block_size << std::endl;
 	
 	
 	//std::cout << std::vector<int>(m_dimensions.begin()+1, m_dimensions.end());
 	//Tensor* new_tensor = new Tensor({1, 2});
-	Tensor new_tensor({1, 2});
+	//Tensor new_tensor({1, 2});
 	//new_tensor->x_copy_memory(index*block_size, block_size, m_heap_memory);
 	//new_tensor->size();
+	//return *new_tensor;
+	
 	return *this;
+}
+
+Tensor* Tensor::test(){
+
+	Tensor* new_tensor = new Tensor({1, 2});
+	return new_tensor;
 }
 
 

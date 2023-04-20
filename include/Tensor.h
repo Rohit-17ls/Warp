@@ -4,7 +4,7 @@
 #include <cstring>
 #include <stdexcept>
 #include <cstdio>
-
+#include <functional>
 
 namespace Warp{
 
@@ -61,6 +61,9 @@ private:
 	}
 
 
+	// External Defintions
+	void m_logarithm(const float& base); // Aggregates.h
+	void m_sqrt();               // Aggregates.h
 
 public:
 	// Constructors
@@ -103,6 +106,9 @@ public:
 		return std::vector<int>(m_dimensions);
 	}
 
+	std::pair<int, int> size_in_bytes() const{
+		return {m_memory_items*sizeof(float), sizeof(float)};
+	}
 
 
 	// Copy Constructor
@@ -111,6 +117,7 @@ public:
 		// Allocate memoy for heap allocated members
 		std::cout << "Copy Constructor Called\n";
 		m_heap_memory = new float[other.m_memory_items];
+		memcpy(m_heap_memory, other.m_heap_memory, sizeof(float)*other.m_memory_items);
 	}
 
 
@@ -135,17 +142,22 @@ public:
 	float item();
 	//Tensor* operator[](const int& index);
 	Tensor& operator[](const int& index);
+	Tensor* test();
 
 	// Reshaping.h
 	Tensor& view(const std::vector<int>& new_dimensions);
 	Tensor& reshape(const std::vector<int>& new_dimensions);
 	Tensor& flatten();
 	Tensor&  unsqueeze();
+
+	// Aggregates.h
+	Tensor& log(const float& base);
+	Tensor& sqrt();
 	
 	// ------------------------------------------------
 
 	// x-methods
-	void x_copy_memory(const int& start_index, const int& end_index, float* src_data_address);		
+	void x_copy_memory(const int& start_index, const int& end_index, float* src_data_address);
 	
 };
 

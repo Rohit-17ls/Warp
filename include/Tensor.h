@@ -8,6 +8,7 @@
 
 namespace Warp{
 
+
 class Tensor{
 	
 private:
@@ -15,6 +16,7 @@ private:
 	std::vector<int> m_dimensions;
 	int m_memory_items = 1; // Total number of elements in the tensor
 	int m_memory_item_size = sizeof(float);
+
 
 	void m_log_start_brace(int padding_space){
 		for(int i=0; i<padding_space; i++) std::cout << " "; 
@@ -58,16 +60,21 @@ private:
 		for(int i=start; i<end; i+=step){
 			m_heap_memory[ind++] = i;
 		}
+	
 	}
+
 
 
 	// External Defintions
 	void m_logarithm(const float& base); // Aggregates.h
 	void m_sqrt();               // Aggregates.h
 
+	// Utility.h
+	bool is_same_dimensions(const Tensor& t1, const Tensor& t2) const;
+
 public:
 	// Constructors
-	
+
 	Tensor(const std::vector<int>& dimensions){
 		m_dimensions.assign(dimensions.begin(), dimensions.end());
 		for(int& dim : m_dimensions) m_memory_items *= dim;
@@ -129,10 +136,10 @@ public:
 	}
 	
 
-	// Friend functions
+	// Friend.h -> Friend functions
 
 	friend std::ostream& operator<<(std::ostream& os, Tensor& tensor);
-	
+	friend bool operator==(const std::vector<int>& v1, const std::vector<int>& v2);
 	
 	// Externally defined members' protypal definitions
 	
@@ -153,7 +160,31 @@ public:
 	// Aggregates.h
 	Tensor& log(const float& base);
 	Tensor& sqrt();
+
+	// ConstantArithmetic.h
+	Tensor& operator+(int summand);
+	Tensor& operator-(int subtrahend);
+	Tensor& operator*(int multiplier);
+	Tensor& operator/(int divisor);
+	static Tensor& add(const Tensor& src_tensor, int summand);
+	static Tensor& subtract(const Tensor& src_tensor, int subtrahend);
+	static Tensor& multiply(const Tensor& src_tensor, int multiplier);
+	static Tensor& divide(const Tensor& src_tensor, int divisor);
 	
+	// TensorArithmetic.h
+	Tensor& operator+(const Tensor& operand_tensor);
+	Tensor& operator-(const Tensor& operand_tensor);
+	Tensor& operator*(const Tensor& operand_tensor);
+	Tensor& operator/(const Tensor& operand_tensor);
+
+
+	// RandomValued.h
+	static Tensor& randn(const std::vector<int>& dimensions, Tensor* out = nullptr, bool requires_grad = false);
+
+
+	// GarbageCollection.h
+	void discard();
+
 	// ------------------------------------------------
 
 	// x-methods
@@ -178,4 +209,13 @@ std::ostream& operator<<(std::ostream& os, std::vector<int> vec){
 	return os;
 }
 
+bool operator==(const std::vector<int>& v1, const std::vector<int>& v2){
+	if(v1.size() != v2.size()) return false;
+	
+	for(int i=0; i<v1.size(); i++){
+		if(v1[i] != v2[i]) return false;
+	}
+
+	return true;
+}
 
